@@ -159,11 +159,12 @@
 						
                     }
 					else if (percent >= 70 ) {
-                        $('#progressBar').removeClass('bg-danger').addClass('bg-success');
+                        $('#progressBar').removeClass('bg-warning').addClass('bg-success');
 						
                     }
 					else {
                         $('#progressBar').removeClass('bg-success').addClass('bg-danger');
+			$('#progressBar').removeClass('bg-warning').addClass('bg-danger');
                     }
 
                     // Fetch Last Price and Description from JSON data
