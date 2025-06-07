@@ -34,8 +34,8 @@
     
 
     <div class="container">
-	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">Stock Analysis</a>
+	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Stock Analysis <span id='tanggal'></span></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -109,6 +109,8 @@
 			let formattedDate = currentDate.getFullYear() +
                     ("0" + (currentDate.getMonth() + 1)).slice(-2) +
                     ("0" + currentDate.getDate()).slice(-2);
+		let tanggal=("0" + currentDate.getDate()).slice(-2)+"-"+("0" + (currentDate.getMonth() + 1)).slice(-2)+"-"+currentDate.getFullYear();
+		$('#tanggal').html(tanggal);
 			// Menambahkan string ".json"
 			let fileName = "https://soweon.com/json/"+formattedDate + ".json";
             $.getJSON(fileName, function(data) {
