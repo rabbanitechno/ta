@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Data Table</title>
+    <!-- Bootstrap 4 CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <!-- jQuery DataTables CSS -->
+    <link href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" rel="stylesheet">
+    <!-- Custom CSS for styling -->
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .navbar {
+            margin-bottom: 20px;
+        }
+        .container {
+            margin-top: 30px;
+        }
+        h2 {
+            font-family: 'Arial', sans-serif;
+            font-weight: bold;
+            color: #007bff;
+        }
+        .table-responsive {
+            overflow-x: auto; /* Enable horizontal scrolling */
+        }
+    </style>
+</head>
+<body>
+
+    
+
+    <div class="container">
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Stock Analysis</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="index.html">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="analysis.html">Analysis</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+        <h2 class="text-center">Stock Data</h2>
+        
+        <!-- Table wrapped inside a responsive container -->
+        <div class="table-responsive">
+            <table id="stockTable" class="table table-bordered table-striped">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Ticker</th>
+                        <th>P/E Ratio</th>
+                        <th>P/B Ratio</th>
+                        <th>Dividend Yield</th>
+                        <th>ROE</th>
+                        <th>Debt-to-Equity</th>
+                        <th>Market Cap</th>
+                        <th>52-Week Range</th>
+                        <th>Operating Margin</th>
+                        <th>Current Ratio</th>
+                        <th>Profit Margin</th>
+                        <th>Operating Cashflow</th>
+                        <th>OBV</th>
+                        <th>CMF</th>
+                        <th>Aroon Indicator</th>
+                        <th>Parabolic SAR</th>
+                        <th>VPT</th>
+                        <th>ATR</th>
+                        <th>Elder Ray Index</th>
+                        <th>Trix Indicator</th>
+                        <th>Force Index</th>
+                        <th>Last Price</th>
+                        <th>Max Potential Increase</th>
+                        <th>Max Potential Decrease</th>
+                        <th>Power Up</th>
+                        <th>Percentage Increase</th>
+                        <th>Target Profit</th>
+                        <th>Cut Loss</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Data will be inserted here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- jQuery, Bootstrap, and DataTables JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <!-- JavaScript for handling JSON data and populating the table -->
+    <script>
+        $(document).ready(function() {
+            // Load JSON data (replace the URL if needed or fetch from local file)
+			let currentDate = new Date();
+			// Format tanggal menjadi YYYY-MM-DD
+			let formattedDate = currentDate.getFullYear() +
+                    ("0" + (currentDate.getMonth() + 1)).slice(-2) +
+                    ("0" + currentDate.getDate()).slice(-2);
+			// Menambahkan string ".json"
+			let fileName = formattedDate + ".json";
+            $.getJSON(fileName, function(data) {
+                let tableData = '';
+                
+                // Loop through the data and build table rows
+                $.each(data, function(index, stock) {
+                    tableData += `
+                        <tr>
+                            <td>${stock.Ticker}</td>
+                            <td>${stock["P/E Ratio"]}</td>
+                            <td>${stock["P/B Ratio"]}</td>
+                            <td>${stock["Dividend Yield"]}</td>
+                            <td>${stock["ROE"]}</td>
+                            <td>${stock["Debt-to-Equity"]}</td>
+                            <td>${stock["Market Cap"]}</td>
+                            <td>${stock["52-Week Range"]}</td>
+                            <td>${stock["Operating Margin"]}</td>
+                            <td>${stock["Current Ratio"]}</td>
+                            <td>${stock["Profit Margin"]}</td>
+                            <td>${stock["Operating Cashflow"]}</td>
+                            <td>${stock["OBV"]}</td>
+                            <td>${stock["CMF"]}</td>
+                            <td>${stock["Aroon Indicator"]}</td>
+                            <td>${stock["Parabolic SAR"]}</td>
+                            <td>${stock["VPT"]}</td>
+                            <td>${stock["ATR"]}</td>
+                            <td>${stock["Elder Ray Index"]}</td>
+                            <td>${stock["Trix Indicator"]}</td>
+                            <td>${stock["Force Index"]}</td>
+                            <td>${stock["Last Price"]}</td>
+                            <td>${stock["Max Potential Increase"]}</td>
+                            <td>${stock["Max Potential Decrease"]}</td>
+                            <td>${stock["Power Up"]}</td>
+                            <td>${stock["Percentage Increase"]}</td>
+                            <td>${stock["Target Profit"]}</td>
+                            <td>${stock["Cut Loss"]}</td>
+                        </tr>
+                    `;
+                });
+
+                // Append the rows to the table body
+                $("#stockTable tbody").html(tableData);
+
+                // Initialize DataTables plugin
+                $('#stockTable').DataTable({
+                    "paging": true,
+                    "ordering": true,
+                    "info": true
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
