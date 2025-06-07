@@ -156,10 +156,12 @@
                     // Change progress bar color based on the value of "Perse"
                     if (percent > 40 && percent <70) {
                         $('#progressBar').removeClass('bg-danger').addClass('bg-warning');
+			$('#progressBar').removeClass('bg-success').addClass('bg-warning');
 						
                     }
-					else if (percent >= 70 ) {
-                        $('#progressBar').removeClass('bg-warning').addClass('bg-success');
+		   else if (percent >= 70 ) {
+                        $('#progressBar').removeClass('bg-danger').addClass('bg-success');
+			$('#progressBar').removeClass('bg-warning').addClass('bg-success');
 						
                     }
 					else {
