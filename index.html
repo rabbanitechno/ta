@@ -15,12 +15,12 @@
 
         <!-- Input Kode Saham -->
         <div class="mb-3">
-            <label for="kodeSaham" class="form-label">Kode Saham</label>
+            <label for="kodeSaham" class="form-label">Code</label>
             <input type="text" class="form-control" oninput="this.value = this.value.toUpperCase()" id="kodeSaham" />
         </div>
 
         <!-- Button for Triggering Action -->
-        <button id="cekSaham" class="btn btn-primary">Cek Perubahan Harga</button>
+        <button id="cekSaham" class="btn btn-primary">Go</button>
 
         <!-- Result Output -->
         <div id="hasil" class="mt-4">
@@ -29,7 +29,7 @@
 
         <!-- Progress Bar -->
         <div class="mt-4">
-            <h4>Kenaikan </h4>
+            <h4>Power</h4>
             <div class="progress">
                 <div id="progressBar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
                     0%
@@ -49,9 +49,18 @@
     <script>
         $(document).ready(function () {
             var sahamData = [];  // Variable for storing data from JSON
-
+			///
+			let currentDate = new Date();
+			// Format tanggal menjadi YYYY-MM-DD
+			let formattedDate = currentDate.getFullYear() +
+                    ("0" + (currentDate.getMonth() + 1)).slice(-2) +
+                    ("0" + currentDate.getDate()).slice(-2);
+			// Menambahkan string ".json"
+			let fileName = formattedDate + ".json";
+			console.log(fileName);
+			///
             // Handle file upload event
-            $.getJSON('saham_analysis.json', function(data) {
+            $.getJSON(fileName, function(data) {
                 sahamData = data;  // Store the data in the sahamData variable
                 console.log(sahamData);  // For debugging purposes
             }).fail(function() {
@@ -89,7 +98,7 @@
 
                     // Evaluate each indicator
                     for (const [indicator, value] of Object.entries(saham)) {
-                        if (indicator !== 'Ticker' && indicator !== 'Last Price' && indicator !== 'Description' && indicator !== 'Perse') {
+                        if (indicator !== 'Ticker' && indicator !== 'Last Price' &&  indicator !== 'Power Up') {
                             totalIndicators++;
                             if (value === 'Naik') {
                                 naikCount++;
@@ -103,42 +112,50 @@
                     }
 
                     // Calculate majority analysis result
-                    var prediksi = "Netral";
+                    var prediksi = "NETRAL";
                     if (naikCount > totalIndicators / 2) {
-                        prediksi = "Naik";
+                        prediksi = "NAIK";
                     } else if (naikCount < totalIndicators / 2) {
-                        prediksi = "Turun";
+                        prediksi = "TURUN";
                     }
 
                     // Display analysis result
-                    $('#hasil').html(`<div class="alert alert-info">Predicted stock ${kodeSaham}: ${prediksi}</div>`);
+                    $('#hasil').html(`<div class="alert alert-info">Predicted stock ${kodeSaham}:<b>  ${prediksi}</b></div>`);
 
                     // Fetch Progress Percentage from the "Perse" field in JSON
-                    var percent = saham['Perse'] * 100;  // Assuming "Perse" field in JSON represents the progress percentage
-                    $('#progressBar').css('width', percent + '%').attr('aria-valuenow', percent).text(percent.toFixed(2) + '%');
+                    var percent = saham['Power Up'];  // Assuming "Perse" field in JSON represents the progress percentage
+                    $('#progressBar').css('width', percent + '%').attr('aria-valuenow', percent).text(percent.toFixed(0) + '%');
 
                     // Change progress bar color based on the value of "Perse"
-                    if (percent > 50) {
+                    if (percent > 40 && percent <70) {
+                        $('#progressBar').removeClass('bg-danger').addClass('bg-warning');
+						
+                    }
+					else if (percent >= 70 ) {
                         $('#progressBar').removeClass('bg-danger').addClass('bg-success');
-                    } else {
+						
+                    }
+					else {
                         $('#progressBar').removeClass('bg-success').addClass('bg-danger');
                     }
 
                     // Fetch Last Price and Description from JSON data
                     var lastPrice = saham['Last Price'].toFixed(0);  // Get the Last Price from the JSON
-                    var description = saham['Deskripsi'];  // Get the Description from the JSON
+                    //var description = saham['Deskripsi'];  // Get the Description from the JSON
                     
                     // Assuming the last price and description are available
                     var targetProfit = (lastPrice * 1.1).toFixed(0);  // Target profit (10% increase)
                     var cutLoss = (lastPrice * 0.9).toFixed(0);  // Cut loss (10% decrease)
-					
+					var max_pot_in =saham['Max Potential Increase'];
+					var max_pot_dec =saham['Max Potential Decrease'];
 					
 					
 
                     $('#targetInfo').html(`
                         <div class="alert alert-info">
                             <strong>Last Price:</strong> ${lastPrice}<br>
-                            <strong>Description:</strong> ${description}<br>
+                            <strong>Potensi Kenaikan Max:</strong> ${max_pot_in}<br>
+							<strong>Potensi Penurunan Max:</strong> ${max_pot_dec}<br>
                             <strong>Target Profit (10%):</strong> ${targetProfit}<br>
                             <strong>Cut Loss (10%):</strong> ${cutLoss}
                         </div>
