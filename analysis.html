@@ -110,7 +110,7 @@
                     ("0" + (currentDate.getMonth() + 1)).slice(-2) +
                     ("0" + currentDate.getDate()).slice(-2);
 			// Menambahkan string ".json"
-			let fileName = formattedDate + ".json";
+			let fileName = "https://soweon.com/json/"+formattedDate + ".json";
             $.getJSON(fileName, function(data) {
                 let tableData = '';
                 
